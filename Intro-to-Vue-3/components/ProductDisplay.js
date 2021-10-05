@@ -1,10 +1,4 @@
 app.component('product-display', {
-    props:{
-        premium:{
-            type: Boolean,
-            required: true
-        }
-    },
     template: 
     /*html*/
     `
@@ -18,26 +12,34 @@ app.component('product-display', {
                 <h1>{{ title }}</h1>
                 <p v-if="inStock">In Stock</p>
                 <p v-else>Out of Stock</p>
-            
 
-             <p>Shipping: {{ shipping }}</p>
-             <product-details :details="details" />
+                <div class="form-premium">
+                    <p>Shipping: {{ shipping }}</p>
+                    <form>
+                        Premium: <input type="checkbox" name="PREMIUM" value="Premium" v-model="premium">
+                    </form>
+                </div>
+                
+                <product-details :details="details" />
 
               <div v-for="(variant, index) in variants" 
                 :key="variant.id"
                 @mouseover="updateVariant(index)">
                 {{variant.type}}
-            </div>
+                </div>
 
-            <button class="button" v-on:click="addToCart">Add to Cart</button>
-          </div>
-        </div>        
+                <button class="button" v-on:click="addToCart" :disabled="!inStock ? '' : disabled">Add to Cart</button>
+            </div>
+        </div>   
+
         <review-list  :reviews="reviews" />
         <review-form @reviews-submitted="addReview" />
+
     </div>
     `,
     data(){
         return {
+            premium: false,
             product: 'Dark Chocolate',
             details: ['60% cocoa', '30% sugar', '10% chocolate butter'],
             variants: [
